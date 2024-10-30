@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Interativo - História</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        #result {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #006400;
+            margin-top: 20px;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste Interativo - História</h1>
+    <div class="container" id="quiz-container"></div>
+    <button class="submit-btn" onclick="calculateScore()">Submeter Respostas</button>
+    <p id="result"></p>
+
+    <script>
+        const questions = [
+            { question: "Qual foi o território mais importante do Império Português nos séculos XVII e XVIII?", options: ["Angola", "Índia", "Brasil", "Timor"], answer: "Brasil" },
+            { question: "Que países atacavam o Império Português durante o domínio filipino?", options: ["França, Holanda e Inglaterra", "Inglaterra, Holanda e França", "Espanha, Itália e França", "Alemanha, Inglaterra e Espanha"], answer: "Inglaterra, Holanda e França" },
+            { question: "Qual foi um dos principais produtos exportados do Brasil que trouxe lucro para Portugal?", options: ["Madeira", "Açúcar", "Ouro", "Café"], answer: "Açúcar" },
+            { question: "Em que século foi descoberto ouro no Brasil?", options: ["XVI", "XVII", "XVIII", "XIX"], answer: "XVII" },
+            { question: "Qual era a importância do açúcar produzido no Brasil?", options: ["Era usado na alimentação local", "Era vendido barato na Europa", "Tornou-se uma das principais exportações para a Europa", "Era essencial para a construção de cidades"], answer: "Tornou-se uma das principais exportações para a Europa" },
+            { question: "Quais eram os principais territórios portugueses na Ásia durante o século XVIII?", options: ["Goa, Damão e Macau", "Japão e Coreia", "Singapura e Ceilão", "Índia e Filipinas"], answer: "Goa, Damão e Macau" },
+            { question: "Por que o Brasil se tornou a colónia mais rica de Portugal no século XVIII?", options: ["Produção de açúcar e descoberta de ouro", "Comércio de armas", "Plantação de especiarias", "Agricultura de trigo"], answer: "Produção de açúcar e descoberta de ouro" },
+            { question: "O que eram os 'bandeirantes'?", options: ["Exploradores que procuravam ouro e capturavam índios", "Missionários cristãos", "Comerciais portugueses", "Senhores de engenho"], answer: "Exploradores que procuravam ouro e capturavam índios" },
+            { question: "Para que propósito os escravos africanos eram trazidos para o Brasil?", options: ["Trabalhar nas minas e plantações de açúcar", "Comércio marítimo", "Expedições de exploração", "Servirem na corte"], answer: "Trabalhar nas minas e plantações de açúcar" },
+            { question: "Quem governava Portugal na primeira metade do século XVIII?", options: ["D. João II", "D. João V", "D. Pedro IV", "D. José I"], answer: "D. João V" },
+            { question: "Qual era o papel dos missionários no Brasil colonial?", options: ["Colonizar novas terras", "Converter os índios ao cristianismo", "Participar nas expedições", "Trabalhar nas plantações"], answer: "Converter os índios ao cristianismo" },
+            { question: "Qual produto foi essencial para enriquecer a corte de D. João V?", options: ["Café", "Ouro", "Prata", "Madeira"], answer: "Ouro" },
+            { question: "Que prática social o rei D. João V adotava em sua corte?", options: ["Comer sem cerimônias", "Receber conselhos públicos", "Organizar banquetes e festas luxuosas", "Promover a economia rural"], answer: "Organizar banquetes e festas luxuosas" },
+            { question: "Onde eram alojados os escravos nas plantações de açúcar?", options: ["Casas dos senhores", "Senzalas", "Igrejas", "Celeiros"], answer: "Senzalas" },
+            { question: "Quem eram os 'bandeirantes' na sociedade brasileira do século XVII?", options: ["Fazendeiros", "Aventureiros que capturavam índios e procuravam ouro", "Soldados portugueses", "Diplomatas"], answer: "Aventureiros que capturavam índios e procuravam ouro" },
+            { question: "Como eram tratadas as populações indígenas no Brasil colonial?", options: ["Foram escravizados e usados nas plantações", "Eram diplomatas", "Tornaram-se nobres", "Eram protegidos pela coroa"], answer: "Foram escravizados e usados nas plantações" },
+            { question: "Qual era o papel dos Jesuítas em relação aos escravos e índios?", options: ["Defender os índios e criticar o tratamento cruel dos escravos", "Enriquecer no comércio", "Auxiliar na mineração", "Dirigir plantações"], answer: "Defender os índios e criticar o tratamento cruel dos escravos" },
+            { question: "Qual característica define o estilo barroco na arquitetura?", options: ["Simplicidade", "Uso de talha dourada e linhas curvas", "Cores neutras", "Minimalismo"], answer: "Uso de talha dourada e linhas curvas" },
+            { question: "Qual era o imposto cobrado pelo rei de Portugal sobre o ouro do Brasil?", options: ["Décimo", "Quinto", "Sétimo", "Primeiro"], answer: "Quinto" },
+            { question: "Que produto brasileiro foi exportado em grandes quantidades durante o século XVIII?", options: ["Trigo", "Açúcar", "Batata", "Chá"], answer: "Açúcar" },
+            { question: "Como os escravos africanos eram transportados para o Brasil?", options: ["Em condições precárias e desumanas", "Em navios luxuosos", "Caminhando por terra", "Em barcos de pesca"], answer: "Em condições precárias e desumanas" },
+            { question: "O que era a Monarquia Absoluta?", options: ["Um sistema onde o rei detinha todos os poderes", "Governo parlamentar", "Democracia", "Sistema militar"], answer: "Um sistema onde o rei detinha todos os poderes" },
+            { question: "Qual cidade foi conhecida pela produção de açúcar no Brasil?", options: ["São Paulo", "Brasília", "Bahia", "Amazonas"], answer: "Bahia" },
+            { question: "De onde eram os principais colonizadores que chegaram ao Brasil?", options: ["Inglaterra e Espanha", "Portugal", "Itália", "França"], answer: "Portugal" },
+            { question: "Qual a consequência das expedições dos bandeirantes no Brasil?", options: ["Construção de igrejas", "Expansão do território", "Fuga dos escravos", "Declínio da mineração"], answer: "Expansão do território" },
+            { question: "Por que o rei D. João V construiu monumentos grandiosos?", options: ["Para aumentar o turismo", "Para honrar os santos", "Para exibir seu poder e riqueza", "Para gerar emprego"], answer: "Para exibir seu poder e riqueza" },
+            { question: "O que define a miscigenação no Brasil colonial?", options: ["Mistura de europeus, índios e africanos", "Separação entre colónias", "Exclusão de estrangeiros", "Política de imigração"], answer: "Mistura de europeus, índios e africanos" },
+            { question: "Qual evento cultural da corte de D. João V refletia a influência europeia?", options: ["Cerimônias de coroação", "Ópera e teatro francês", "Festas regionais", "Carnavais"], answer: "Ópera e teatro francês" },
+            { question: "O que era o “engenho de açúcar”?", options: ["Local de produção e processamento da cana-de-açúcar", "Palácio do rei", "Escritório comercial", "Biblioteca"], answer: "Local de produção e processamento da cana-de-açúcar" },
+            { question: "Qual região do Brasil tornou-se rica devido à mineração no século XVIII?", options: ["Ceará", "Amazonas", "Minas Gerais", "Pará"], answer: "Minas Gerais" }
+        ];
+
+        function loadQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('container');
+
+                const questionText = document.createElement('p');
+                questionText.classList.add('question');
+                questionText.innerText = `${index + 1}. ${q.question}`;
+                questionDiv.appendChild(questionText);
+
+                const optionsList = document.createElement('ul');
+                optionsList.classList.add('options');
+
+                q.options.forEach(option => {
+                    const optionItem = document.createElement('li');
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'radio';
+                    optionInput.name = `question${index}`;
+                    optionInput.value = option;
+                    optionItem.appendChild(optionInput);
+
+                    const optionLabel = document.createElement('label');
+                    optionLabel.innerText = option;
+                    optionItem.appendChild(optionLabel);
+
+                    optionsList.appendChild(optionItem);
+                });
+
+                questionDiv.appendChild(optionsList);
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function calculateScore() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption && selectedOption.value === q.answer) {
+                    score++;
+                }
+            });
+            const resultText = document.getElementById('result');
+            resultText.innerText = `A tua pontuação é ${score} de ${questions.length}.`;
+        }
+
+        window.onload = loadQuiz;
+    </script>
+</body>
+</html>
